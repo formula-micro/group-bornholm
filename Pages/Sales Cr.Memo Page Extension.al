@@ -31,4 +31,11 @@ pageextension 50112 "Sales Cr.Memo Ext" extends "Sales Credit Memo"
             }
         }
     }
+
+    trigger OnAfterGetRecord()
+    begin
+        if Rec."District" = '' then begin
+            Rec."District" := 'Bornholm'; // Deafault value
+        end;
+    end;
 }
