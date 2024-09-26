@@ -16,6 +16,7 @@ reportextension 50123 "Posted Sales Invoice Ext" extends "Standard Sales - Invoi
             column(MessageLine1; MessageLine1) { }
             column(MessageLine2; MessageLine2) { }
             column(Greeting; GreetingRec."Greeting text") { }
+            column(IncludingVATLine; IncludingVATLine) { }
         }
 
         modify("Header")
@@ -30,8 +31,9 @@ reportextension 50123 "Posted Sales Invoice Ext" extends "Standard Sales - Invoi
                 IF GreetingRec.Get("Greeting name") THEN BEGIN END;
 
                 // Build reminder message.
-                MessageLine1 := 'Vi beder dig senest den ' + Format("Due Date") + ' indbetale ' + "Currency Code" + ' ' + Format("Amount Including VAT", 0, 0) + ' til bankkonto ' + BankAccountRec."Bank Account No.";
-                MessageLine2 := 'Oplys venligst kundenummer ' + "Sell-to Customer No." + ' og fakturanummer ' + "No." + ' på din betaling.';
+                MessageLine1 := StrSubstNo(MessageLine1Lbl, FormatDate("Due Date"), "Currency Code", Format("Amount Including VAT", 0, 0), BankAccountRec."Bank Account No.");
+                MessageLine2 := StrSubstNo(MessageLine2Lbl, "Sell-to Customer No.", "No.");
+                IncludingVATLine := StrSubstNo(IncludingVATLineLbl, Format("Amount Including VAT", 0, 0))
             end;
         }
     }
@@ -48,14 +50,19 @@ reportextension 50123 "Posted Sales Invoice Ext" extends "Standard Sales - Invoi
         TravelGuaranteeLbl = 'Rejsegarantifonden nr.';
         UnitPriceLbl = 'Pris';
         LineAmountLbl = 'Beløb';
-        IncludingVATLbl = 'Heraf moms';
+        //IncludingVATLbl = 'heraf moms';
     }
 
     var
         BankAccountRec: Record "Bank Account";
+        VATRec: Record "VAT Posting Parameters";
         GreetingRec: Record "Greeting";
         MessageLine1: Text;
         MessageLine2: Text;
+        MessageLine1Lbl: Label 'Vi beder dig senest den %1 indbetale %2 %3 til bankkonto %4.'; // %1: Due Date, %2: Currency, %3: Amount, %4: Bank Account
+        MessageLine2Lbl: Label 'Oplys venligst kundenummer %1 og fakturanummer %2 på din betaling.'; // %1: Customer No., %2: Invoice No.
+        IncludingVATLine: Text;
+        IncludingVATLineLbl: Label 'heraf moms %1';
 
     procedure FormatDate(DateValue: Date): Text[100]
     begin

@@ -6,106 +6,60 @@ reportextension 50124 "Posted Sales Cr.Memo Ext" extends "Standard Sales - Credi
     {
         add("Header")
         {
-            column(Name; "Name")
-            {
-            }
-            column(Arrival_date; FormatDate("Arrival date"))
-            {
-            }
+            column(Name; "Name") { }
+            column(Arrival_date; FormatDate("Arrival date")) { }
+            column(Departure_date; FormatDate("Departure date")) { }
+            column(Document_Date; FormatDate("Document Date")) { }
+            column(Due_Date; FormatDate("Due Date")) { }
+            column(Number_of_people; "Number of people") { }
+            column(District; "District") { }
+            column(MessageLine1; MessageLine1) { }
+            column(MessageLine2; MessageLine2) { }
+            column(IncludingVATLine; IncludingVATLine) { }
+        }
 
-            column(Departure_date; FormatDate("Departure date"))
-            {
-            }
+        modify("Header")
+        {
+            trigger OnAfterAfterGetRecord()
+            var
+            begin
+                // Retrieve more information about the current company bank account.
+                IF BankAccountRec.Get("Company Bank Account Code") THEN BEGIN END;
 
-            column(Number_of_people; "Number of people")
-            {
-            }
-
-            column(District; "District")
-            {
-            }
-
-            column(InvoiceMessagePart1; GetInvoiceMessagePart1("Due Date", "Currency Code", "Amount Including VAT", "Company Bank Account Code"))
-            {
-            }
-
-            column(InvoiceMessagePart2; GetInvoiceMessagePart2("Sell-to Customer No.", "No."))
-            {
-            }
-
-            column(NameCaption; NameCaptionLbl)
-            {
-            }
-
-            column(DistrictCaption; DistrictCaptionLbl)
-            {
-            }
-            column(ArrivalDateCaption; ArrivalDateCaptionLbl)
-            {
-            }
-
-            column(DepartureDateCaption; DepartureDateCaptionLbl)
-            {
-            }
-
-            column(NumberOfPeopleCaption; NumberOfPeopleCaptionLbl)
-            {
-            }
-
-            column(InvoiceDateCaption; InvoiceDateCaptionLbl)
-            {
-            }
-
-            column(InvoiceAmountCaption; InvoiceAmountCaptionLbl)
-            {
-            }
-            column(TravelGuaranteeCaption; TravelGuaranteeCaptionLbl)
-            {
-            }
-
-            column(UnitPriceCaption; UnitPriceCaptionLbl)
-            {
-            }
-
-            column(LineAmountCaption; LineAmountCaptionLbl)
-            {
-            }
-
-            column(IncludingVATCaption; IncludingVATCaptionLbl)
-            {
-            }
+                // Build reminder message.
+                MessageLine1 := StrSubstNo(MessageLine1Lbl, FormatDate("Due Date"), "Currency Code", Format("Amount Including VAT", 0, 0), BankAccountRec."Bank Account No.");
+                MessageLine2 := StrSubstNo(MessageLine2Lbl, "Sell-to Customer No.", "No.");
+                IncludingVATLine := StrSubstNo(IncludingVATLineLbl, Format(VATRec."VAT Amount", 0, 0))
+            end;
         }
     }
 
+    labels
+    {
+        NameLbl = 'Navn';
+        DistrictLbl = 'Afdeling';
+        ArrivalDateLbl = 'Ankomst';
+        DepartureDateLbl = 'Afrejse';
+        NumberOfPeopleLbl = 'Antal personer';
+        InvoiceDateLbl = 'Fakturadato';
+        InvoiceAmountLbl = 'Fakturabeløb';
+        TravelGuaranteeLbl = 'Rejsegarantifonden nr.';
+        UnitPriceLbl = 'Pris';
+        LineAmountLbl = 'Beløb';
+    }
+
+    var
+        BankAccountRec: Record "Bank Account";
+        VATRec: Record "VAT Amount Line";
+        MessageLine1: Text;
+        MessageLine2: Text;
+        MessageLine1Lbl: Label 'Vi beder dig senest den %1 indbetale %2 %3 til bankkonto %4.'; // %1: Due Date, %2: Currency, %3: Amount, %4: Bank Account
+        MessageLine2Lbl: Label 'Oplys venligst kundenummer %1 og fakturanummer %2 på din betaling.'; // %1: Customer No., %2: Invoice No.
+        IncludingVATLine: Text;
+        IncludingVATLineLbl: Label 'heraf moms %1';
+
     procedure FormatDate(DateValue: Date): Text[100]
     begin
-        exit(FORMAT(DateValue, 0, '<Day,2>-<Month,2>-<Year>'));
+        exit(Format(DateValue, 0, '<Day,2>-<Month,2>-<Year>'));
     end;
-
-    procedure GetInvoiceMessagePart1(DueDate: Date; CurrencyCode: Code[10]; TotalAmount: Decimal; CompanyBankAccountNo: Code[20]): Text[250]
-    var
-        FormattedDueDate: Text[10];
-    begin
-        FormattedDueDate := Format(DueDate, 0, 0);
-        exit('Vi beder dig senest den ' + FormattedDueDate + ' indbetale ' + CurrencyCode + ' ' + Format(TotalAmount, 0, 0) + ' til bankkonto ' + CompanyBankAccountNo);
-    end;
-
-    procedure GetInvoiceMessagePart2(SellToCustomerNo: Code[20]; No: Code[20]): Text[250]
-    begin
-        exit('Oplys venligst kundenummer ' + SellToCustomerNo + ' og kreditnotanummer ' + No + ' på din betaling.');
-    end;
-
-
-    var
-        NameCaptionLbl: Label 'Navn';
-        DistrictCaptionLbl: Label 'District';
-        ArrivalDateCaptionLbl: Label 'Ankomst';
-        DepartureDateCaptionLbl: Label 'Afrejse';
-        NumberOfPeopleCaptionLbl: Label 'Antal personer';
-        InvoiceDateCaptionLbl: Label 'Fakturadato';
-        InvoiceAmountCaptionLbl: Label 'Fakturabeløb';
-        TravelGuaranteeCaptionLbl: Label 'Rejsegarantifonden nr. ';
-        UnitPriceCaptionLbl: Label 'Pris';
-        LineAmountCaptionLbl: Label 'Beløb';
-        IncludingVATCaptionLbl: Label 'Heraf moms';
 }
