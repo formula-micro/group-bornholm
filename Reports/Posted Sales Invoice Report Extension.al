@@ -16,13 +16,11 @@ reportextension 50123 "Posted Sales Invoice Ext" extends "Standard Sales - Invoi
             column(MessageLine1; MessageLine1) { }
             column(MessageLine2; MessageLine2) { }
             column(Greeting; GreetingRec."Greeting text") { }
-            column(IncludingVATLine; IncludingVATLine) { }
         }
 
         modify("Header")
         {
             trigger OnAfterAfterGetRecord()
-            var
             begin
                 // Retrieve more information about the current company bank account.
                 IF BankAccountRec.Get("Company Bank Account Code") THEN BEGIN END;
@@ -33,7 +31,22 @@ reportextension 50123 "Posted Sales Invoice Ext" extends "Standard Sales - Invoi
                 // Build reminder message.
                 MessageLine1 := StrSubstNo(MessageLine1Lbl, FormatDate("Due Date"), "Currency Code", Format("Amount Including VAT", 0, 0), BankAccountRec."Bank Account No.");
                 MessageLine2 := StrSubstNo(MessageLine2Lbl, "Sell-to Customer No.", "No.");
-                IncludingVATLine := StrSubstNo(IncludingVATLineLbl, Format("Amount Including VAT", 0, 0))
+            end;
+        }
+
+        add(Totals)
+        {
+            column(IncludingVATLine; IncludingVATLine) { }
+        }
+
+        modify(Totals)
+        {
+            trigger OnAfterAfterGetRecord()
+            begin
+                if "TotalAmountVAT" <> 0 then
+                    IncludingVATLine := StrSubstNo(IncludingVATLineLbl, Format("TotalAmountVAT", 0, 0))
+                else
+                    IncludingVATLine := ''; // Ensure the line is empty if there's no VAT amount
             end;
         }
     }
@@ -50,12 +63,10 @@ reportextension 50123 "Posted Sales Invoice Ext" extends "Standard Sales - Invoi
         TravelGuaranteeLbl = 'Rejsegarantifonden nr.';
         UnitPriceLbl = 'Pris';
         LineAmountLbl = 'Beløb';
-        //IncludingVATLbl = 'heraf moms';
     }
 
     var
         BankAccountRec: Record "Bank Account";
-        VATRec: Record "VAT Posting Parameters";
         GreetingRec: Record "Greeting";
         MessageLine1: Text;
         MessageLine2: Text;

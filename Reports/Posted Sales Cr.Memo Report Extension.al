@@ -15,13 +15,11 @@ reportextension 50124 "Posted Sales Cr.Memo Ext" extends "Standard Sales - Credi
             column(District; "District") { }
             column(MessageLine1; MessageLine1) { }
             column(MessageLine2; MessageLine2) { }
-            column(IncludingVATLine; IncludingVATLine) { }
         }
 
         modify("Header")
         {
             trigger OnAfterAfterGetRecord()
-            var
             begin
                 // Retrieve more information about the current company bank account.
                 IF BankAccountRec.Get("Company Bank Account Code") THEN BEGIN END;
@@ -29,7 +27,22 @@ reportextension 50124 "Posted Sales Cr.Memo Ext" extends "Standard Sales - Credi
                 // Build reminder message.
                 MessageLine1 := StrSubstNo(MessageLine1Lbl, FormatDate("Due Date"), "Currency Code", Format("Amount Including VAT", 0, 0), BankAccountRec."Bank Account No.");
                 MessageLine2 := StrSubstNo(MessageLine2Lbl, "Sell-to Customer No.", "No.");
-                IncludingVATLine := StrSubstNo(IncludingVATLineLbl, Format(VATRec."VAT Amount", 0, 0))
+            end;
+        }
+
+        add(Totals)
+        {
+            column(IncludingVATLine; IncludingVATLine) { }
+        }
+
+        modify(Totals)
+        {
+            trigger OnAfterAfterGetRecord()
+            begin
+                if "TotalAmountVAT" <> 0 then
+                    IncludingVATLine := StrSubstNo(IncludingVATLineLbl, Format("TotalAmountVAT", 0, 0))
+                else
+                    IncludingVATLine := ''; // Ensure the line is empty if there's no VAT amount
             end;
         }
     }
@@ -50,11 +63,10 @@ reportextension 50124 "Posted Sales Cr.Memo Ext" extends "Standard Sales - Credi
 
     var
         BankAccountRec: Record "Bank Account";
-        VATRec: Record "VAT Amount Line";
         MessageLine1: Text;
         MessageLine2: Text;
         MessageLine1Lbl: Label 'Vi beder dig senest den %1 indbetale %2 %3 til bankkonto %4.'; // %1: Due Date, %2: Currency, %3: Amount, %4: Bank Account
-        MessageLine2Lbl: Label 'Oplys venligst kundenummer %1 og fakturanummer %2 på din betaling.'; // %1: Customer No., %2: Invoice No.
+        MessageLine2Lbl: Label 'Oplys venligst kundenummer %1 og kreditnotanummer %2 på din betaling.'; // %1: Customer No., %2: Invoice No.
         IncludingVATLine: Text;
         IncludingVATLineLbl: Label 'heraf moms %1';
 
