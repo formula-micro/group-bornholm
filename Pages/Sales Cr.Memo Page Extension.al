@@ -27,7 +27,6 @@ pageextension 50112 "Sales Cr.Memo Ext" extends "Sales Credit Memo"
             field("District"; Rec."District")
             {
                 ApplicationArea = All;
-                Caption = 'Afdeling';
             }
         }
     }

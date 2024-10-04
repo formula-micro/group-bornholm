@@ -5,7 +5,6 @@ page 50110 "Greeting List"
     UsageCategory = Lists;
     SourceTable = "Greeting";
     CardPageID = "Greeting Card";
-    Caption = 'Kunde hilsener';
     Editable = false;
     Permissions = TableData 112 = rimd;
 
@@ -18,13 +17,11 @@ page 50110 "Greeting List"
                 field("Name"; Rec."Greeting name")
                 {
                     ApplicationArea = All;
-                    Caption = 'Navn';
                 }
 
                 field("greeting text"; Rec."Greeting text")
                 {
                     ApplicationArea = All;
-                    Caption = 'Hilsen tekst';
                 }
             }
         }
@@ -37,7 +34,6 @@ page 50110 "Greeting List"
             action("New greeting")
             {
                 ApplicationArea = All;
-                Caption = 'Nyt Hilsen';
                 Image = New;
                 RunObject = Page "Greeting Card";
                 RunPageLink = "Greeting name" = field("Greeting name");

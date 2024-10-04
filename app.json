@@ -1,6 +1,6 @@
 {
   "id": "61a285ea-0031-4ea8-827e-4f6703fd81d4",
-  "name": "ALProject1",
+  "name": "group-bornholm",
   "publisher": "Default Publisher",
   "version": "1.0.0.0",
   "brief": "",
@@ -27,6 +27,7 @@
   },
   "runtime": "13.0",
   "features": [
-    "NoImplicitWith"
+    "TranslationFile",
+    "GenerateCaptions"
   ]
 }

@@ -1,6 +1,5 @@
 page 50111 "Greeting Card"
 {
-    Caption = 'Hilsen Kort';
     PageType = Card;
     ApplicationArea = All;
     SourceTable = "Greeting";
@@ -16,13 +15,11 @@ page 50111 "Greeting Card"
                 field("Name"; Rec."Greeting name")
                 {
                     ApplicationArea = All;
-                    Caption = 'Navn';
                 }
 
                 field("Greeting text"; Rec."Greeting text")
                 {
                     ApplicationArea = All;
-                    Caption = 'Hilsen tekst';
                 }
             }
         }
@@ -35,7 +32,6 @@ page 50111 "Greeting Card"
             action("Save")
             {
                 ApplicationArea = All;
-                Caption = 'Gem';
                 Image = Save;
 
                 trigger OnAction();

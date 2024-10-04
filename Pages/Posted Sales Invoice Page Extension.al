@@ -33,7 +33,6 @@ pageextension 50113 "Posted Sales Invoice Ext" extends "Posted Sales Invoice"
             {
                 ApplicationArea = All;
                 Lookup = true;
-                Caption = 'Hilsen';
                 TableRelation = "Greeting"."Greeting name";
                 trigger OnValidate()
                 begin
