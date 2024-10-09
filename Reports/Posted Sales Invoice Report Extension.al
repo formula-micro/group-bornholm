@@ -7,20 +7,32 @@ reportextension 50123 "Posted Sales Invoice Ext" extends "Standard Sales - Invoi
         add("Header")
         {
             column(Name; "Name") { }
-            column(Arrival_date; FormatDate("Arrival date")) { }
-            column(Departure_date; FormatDate("Departure date")) { }
+            column(ArrivalDate; FormatDate("Arrival date")) { }
+            column(DepartureDate; FormatDate("Departure date")) { }
             column(Document_Date; FormatDate("Document Date")) { }
             column(Due_Date; FormatDate("Due Date")) { }
-            column(Number_of_people; "Number of people") { }
+            column(NumberOfPeople; "Number of people") { }
             column(District; "District") { }
             column(MessageLine1; MessageLine1) { }
             column(MessageLine2; MessageLine2) { }
-            column(Greeting; GreetingRec."Greeting text") { }
+            column(Greeting_text; GreetingRec."Greeting text") { }
+            column(NameLbl; NameLbl) { }
+            column(ArrivalDateLbl; ArrivalDateLbl) { }
+            column(DepartureDateLbl; DepartureDateLbl) { }
+            column(NumberOfPeopleLbl; NumberOfPeopleLbl) { }
+            column(InvoiceDateLbl; InvoiceDateLbl) { }
+            column(InvoiceAmountLbl; InvoiceAmountLbl) { }
+            column(TravelGuaranteeLbl; TravelGuaranteeLbl) { }
+            column(UnitPriceLbl; UnitPriceLbl) { }
+            column(LineAmountLbl; LineAmountLbl) { }
         }
 
         modify("Header")
         {
             trigger OnAfterAfterGetRecord()
+            var
+                GeneralLedgerSetupRec: Record "General Ledger Setup";
+                CurrencyCode: Code[10];
             begin
                 // Retrieve more information about the current company bank account.
                 IF BankAccountRec.Get("Company Bank Account Code") THEN BEGIN END;
@@ -28,8 +40,15 @@ reportextension 50123 "Posted Sales Invoice Ext" extends "Standard Sales - Invoi
                 // Retrieve more information about the current greeting.
                 IF GreetingRec.Get("Greeting name") THEN BEGIN END;
 
+                // Check currency code and retrieve LCY Code if necessary
+                IF GeneralLedgerSetupRec.Get() THEN BEGIN END;
+
+                CurrencyCode := "Currency Code";
+                IF CurrencyCode = '' THEN
+                    CurrencyCode := GeneralLedgerSetupRec."LCY Code";
+
                 // Build reminder message.
-                MessageLine1 := StrSubstNo(MessageLine1Lbl, FormatDate("Due Date"), "Currency Code", Format("Amount Including VAT", 0, 0), BankAccountRec."Bank Account No.");
+                MessageLine1 := StrSubstNo(MessageLine1Lbl, FormatDate("Due Date"), CurrencyCode, Format("Amount Including VAT", 0, 0), BankAccountRec."Bank Account No.");
                 MessageLine2 := StrSubstNo(MessageLine2Lbl, "Sell-to Customer No.", "No.");
             end;
         }
@@ -53,19 +72,28 @@ reportextension 50123 "Posted Sales Invoice Ext" extends "Standard Sales - Invoi
 
     labels
     {
-        NameLbl = 'Name';
-        DistrictLbl = 'District';
-        ArrivalDateLbl = 'Arrival';
-        DepartureDateLbl = 'Departure';
-        NumberOfPeopleLbl = 'Number of people';
-        InvoiceDateLbl = 'Invoice date';
-        InvoiceAmountLbl = 'Invoice amount';
-        TravelGuaranteeLbl = 'Travel Guarantee Fund No.';
-        UnitPriceLbl = 'Price';
-        LineAmountLbl = 'Amount';
+        // NameLbl = 'Name';
+        // DistrictLbl = 'District';
+        // ArrivalDateLbl = 'Arrival';
+        // DepartureDateLbl = 'Departure';
+        // NumberOfPeopleLbl = 'Number of people';
+        // InvoiceDateLbl = 'Invoice date';
+        // InvoiceAmountLbl = 'Invoice amount';
+        // TravelGuaranteeLbl = 'Travel Guarantee Fund No.';
+        // UnitPriceLbl = 'Price';
+        // LineAmountLbl = 'Amount';
     }
 
     var
+        NameLbl: Label 'Name';
+        ArrivalDateLbl: Label 'Arrival';
+        DepartureDateLbl: Label 'Departure';
+        NumberOfPeopleLbl: Label 'Number of people';
+        InvoiceDateLbl: Label 'Invoice date';
+        InvoiceAmountLbl: Label 'Invoice amount';
+        TravelGuaranteeLbl: Label 'Travel Guarantee Fund No.';
+        UnitPriceLbl: Label 'Price';
+        LineAmountLbl: Label 'Amount';
         BankAccountRec: Record "Bank Account";
         GreetingRec: Record "Greeting";
         MessageLine1: Text;
