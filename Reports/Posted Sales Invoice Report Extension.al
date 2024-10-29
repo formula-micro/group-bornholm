@@ -25,6 +25,7 @@ reportextension 50123 "Posted Sales Invoice Ext" extends "Standard Sales - Invoi
             column(TravelGuaranteeLbl; TravelGuaranteeLbl) { }
             column(UnitPriceLbl; UnitPriceLbl) { }
             column(LineAmountLbl; LineAmountLbl) { }
+            column(CustomerNoLbl; CustomerNoLbl) { }
         }
 
         modify("Header")
@@ -33,22 +34,35 @@ reportextension 50123 "Posted Sales Invoice Ext" extends "Standard Sales - Invoi
             var
                 GeneralLedgerSetupRec: Record "General Ledger Setup";
                 CurrencyCode: Code[10];
+                BankAccount: Text[50];
+                Swift: Text[50];
+                Iban: Text[50];
+                Builder: TextBuilder;
             begin
-                // Retrieve more information about the current company bank account.
+                // Retrieve the company bank account information.
                 IF BankAccountRec.Get("Company Bank Account Code") THEN BEGIN END;
+                BankAccount := BankAccountRec."Bank Account No.";
+                Builder.Append(BankAccount);
+
+                IF BankAccountRec."Bank Account No." = '' THEN BEGIN
+                    Builder.AppendLine();
+                    Swift := '*SWIFT: ' + BankAccountRec."SWIFT Code";
+                    Builder.AppendLine(Swift);
+                    Iban := '*IBAN:   ' + BankAccountRec.IBAN;
+                    Builder.Append(Iban);
+                END;
 
                 // Retrieve more information about the current greeting.
                 IF GreetingRec.Get("Greeting name") THEN BEGIN END;
 
                 // Check currency code and retrieve LCY Code if necessary
                 IF GeneralLedgerSetupRec.Get() THEN BEGIN END;
-
                 CurrencyCode := "Currency Code";
                 IF CurrencyCode = '' THEN
                     CurrencyCode := GeneralLedgerSetupRec."LCY Code";
 
                 // Build reminder message.
-                MessageLine1 := StrSubstNo(MessageLine1Lbl, FormatDate("Due Date"), CurrencyCode, Format("Amount Including VAT", 0, 0), BankAccountRec."Bank Account No.");
+                MessageLine1 := StrSubstNo(MessageLine1Lbl, FormatDate("Due Date"), CurrencyCode, Format("Amount Including VAT", 0, 0), Builder.ToText());
                 MessageLine2 := StrSubstNo(MessageLine2Lbl, "Sell-to Customer No.", "No.");
             end;
         }
@@ -72,16 +86,7 @@ reportextension 50123 "Posted Sales Invoice Ext" extends "Standard Sales - Invoi
 
     labels
     {
-        // NameLbl = 'Name';
-        // DistrictLbl = 'District';
-        // ArrivalDateLbl = 'Arrival';
-        // DepartureDateLbl = 'Departure';
-        // NumberOfPeopleLbl = 'Number of people';
-        // InvoiceDateLbl = 'Invoice date';
-        // InvoiceAmountLbl = 'Invoice amount';
-        // TravelGuaranteeLbl = 'Travel Guarantee Fund No.';
-        // UnitPriceLbl = 'Price';
-        // LineAmountLbl = 'Amount';
+
     }
 
     var
@@ -94,14 +99,15 @@ reportextension 50123 "Posted Sales Invoice Ext" extends "Standard Sales - Invoi
         TravelGuaranteeLbl: Label 'Travel Guarantee Fund No.';
         UnitPriceLbl: Label 'Price';
         LineAmountLbl: Label 'Amount';
+        CustomerNoLbl: Label 'Customer No.';
         BankAccountRec: Record "Bank Account";
         GreetingRec: Record "Greeting";
         MessageLine1: Text;
         MessageLine2: Text;
-        MessageLine1Lbl: Label 'Please make a payment of %2 %3 to bank account %4 by %1.'; // %1: Due Date, %2: Currency, %3: Amount, %4: Bank Account
+        MessageLine1Lbl: Label 'Please make a payment of %2 %3 by %1 to our bank account: %4'; // %1: Due Date, %2: Currency, %3: Amount, %4: Bank Account or Swift/Iban
         MessageLine2Lbl: Label 'Please state customer number %1 and invoice number %2 on your payment.'; // %1: Customer No., %2: Invoice No.
         IncludingVATLine: Text;
-        IncludingVATLineLbl: Label 'including VAT %1';
+        IncludingVATLineLbl: Label '"including VAT %1"';
 
     procedure FormatDate(DateValue: Date): Text[100]
     begin
