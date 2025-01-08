@@ -23,7 +23,10 @@ tableextension 50101 "Sales Header Ext" extends "Sales Header"
 
         field(50104; "District"; Text[50]) { }
 
-        field(50105; "Greeting name"; Text[50]) { }
+        field(50105; "Greeting name"; Text[50])
+        {
+            TableRelation = "Greeting"."Greeting name";
+        }
     }
 
     var

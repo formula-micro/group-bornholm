@@ -3,14 +3,13 @@
     "configurations": [
 
         {
-            "tenant": "b1d0b7d2-0046-4343-bb05-cfda3280b42b",
+            //dev: "tenant": "b1d0b7d2-0046-4343-bb05-cfda3280b42b",
+            "tenant": "bcaf0a10-884f-424c-8f9d-fe6f9390b63c",
             "name": "Microsoft cloud sandbox",
             "request": "launch",
             "type": "al",
             "environmentType": "Sandbox",
             "environmentName": "Development",
-            "startupObjectId": 22,
-            "startupObjectType": "Page",
             "breakOnError": "All",
             "launchBrowser": true,
             "enableLongRunningSqlStatements": true,

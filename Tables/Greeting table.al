@@ -1,6 +1,8 @@
 table 50103 "Greeting"
 {
     DataClassification = ToBeClassified;
+    DrillDownPageID = "Greeting List";
+    LookupPageID = "Greeting List";
 
     fields
     {
@@ -9,7 +11,7 @@ table 50103 "Greeting"
             DataClassification = ToBeClassified;
         }
 
-        field(2; "Greeting text"; Text[250])
+        field(2; "Greeting text"; Text[500])
         {
             DataClassification = ToBeClassified;
         }

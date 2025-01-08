@@ -10,17 +10,30 @@ page 50111 "Greeting Card"
     {
         area(content)
         {
-            group(Detaljer)
+            group(Details)
             {
-                field("Name"; Rec."Greeting name")
+                Caption = 'Details';
+
+                grid(Grid)
                 {
-                    ApplicationArea = All;
+                    group("")
+                    {
+                        field("Name"; Rec."Greeting name")
+                        {
+                            ApplicationArea = All;
+                        }
+
+                        field("Greeting text"; Rec."Greeting text")
+                        {
+                            ApplicationArea = All;
+                            MultiLine = true;
+                        }
+
+                    }
+
+
                 }
 
-                field("Greeting text"; Rec."Greeting text")
-                {
-                    ApplicationArea = All;
-                }
             }
         }
     }

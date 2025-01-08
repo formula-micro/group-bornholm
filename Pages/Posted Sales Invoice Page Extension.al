@@ -34,13 +34,6 @@ pageextension 50113 "Posted Sales Invoice Ext" extends "Posted Sales Invoice"
                 ApplicationArea = All;
                 Lookup = true;
                 TableRelation = "Greeting"."Greeting name";
-                trigger OnValidate()
-                begin
-                    if Rec."Greeting name" <> '' then begin
-                        GreetingRec.Get(Rec."Greeting name");
-                        Rec."Greeting text" := GreetingRec."Greeting text";
-                    end;
-                end;
             }
         }
     }

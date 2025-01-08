@@ -5,7 +5,6 @@ page 50110 "Greeting List"
     UsageCategory = Lists;
     SourceTable = "Greeting";
     CardPageID = "Greeting Card";
-    Editable = false;
     Permissions = TableData 112 = rimd;
 
     layout

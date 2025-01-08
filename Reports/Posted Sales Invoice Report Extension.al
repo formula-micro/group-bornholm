@@ -1,6 +1,6 @@
 reportextension 50123 "Posted Sales Invoice Ext" extends "Standard Sales - Invoice"
 {
-    WORDLayout = 'StandardSalesInvoiceExtended.docx';
+    WORDLayout = 'Group Bornholm Salgsfaktura.docx';
 
     dataset
     {

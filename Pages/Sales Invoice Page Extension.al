@@ -37,16 +37,8 @@ pageextension 50111 "Sales Invoice Ext" extends "Sales Invoice"
             {
                 ApplicationArea = All;
                 Lookup = true;
-                TableRelation = "Greeting"."Greeting name";
-
-                trigger OnValidate();
-                begin
-                    if Rec."Greeting name" <> '' then begin
-                        if GreetingRec.Get(Rec."Greeting name") then begin
-                            Rec.Validate("Greeting name", GreetingRec."Greeting name");
-                        end;
-                    end;
-                end;
+                // DrillDown = true;
+                // DrillDownPageId = "Greeting List";
             }
         }
     }

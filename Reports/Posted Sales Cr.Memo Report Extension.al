@@ -1,6 +1,6 @@
 reportextension 50124 "Posted Sales Cr.Memo Ext" extends "Standard Sales - Credit Memo"
 {
-    WORDLayout = 'StandardSalesCreditMemoExtended.docx';
+    WORDLayout = 'Group Bornholm Kreditnota.docx';
 
     dataset
     {
