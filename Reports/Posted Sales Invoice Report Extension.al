@@ -107,7 +107,7 @@ reportextension 50123 "Posted Sales Invoice Ext" extends "Standard Sales - Invoi
         MessageLine1Lbl: Label 'Please make a payment of %2 %3 by %1 to our bank account: %4'; // %1: Due Date, %2: Currency, %3: Amount, %4: Bank Account or Swift/Iban
         MessageLine2Lbl: Label 'Please state customer number %1 and invoice number %2 on your payment.'; // %1: Customer No., %2: Invoice No.
         IncludingVATLine: Text;
-        IncludingVATLineLbl: Label '"including VAT %1"';
+        IncludingVATLineLbl: Label '(including VAT %1)';
 
     procedure FormatDate(DateValue: Date): Text[100]
     begin

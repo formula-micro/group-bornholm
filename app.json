@@ -2,7 +2,7 @@
   "id": "61a285ea-0031-4ea8-827e-4f6703fd81d4",
   "name": "Group-bornholm Aps",
   "publisher": "Formula Micro Bornholm A/S",
-  "version": "1.0.0.0",
+  "version": "1.0.2.0",
   "brief": "Base App for Group Bornholm ApS",
   "description": "This extension contains all objects specifically made for Group Bornholm Aps.",
   "privacyStatement": "",
@@ -25,7 +25,6 @@
     "allowDownloadingSource": true,
     "includeSourceInSymbolFile": true
   },
-  "runtime": "13.0",
   "features": [
     "TranslationFile",
     "GenerateCaptions"

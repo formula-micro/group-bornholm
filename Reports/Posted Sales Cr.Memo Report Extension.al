@@ -69,7 +69,7 @@ reportextension 50124 "Posted Sales Cr.Memo Ext" extends "Standard Sales - Credi
         CustomerNoLbl: Label 'Customer No.';
         BankAccountRec: Record "Bank Account";
         IncludingVATLine: Text;
-        IncludingVATLineLbl: Label '"including VAT %1"';
+        IncludingVATLineLbl: Label '(including VAT %1)';
 
     procedure FormatDate(DateValue: Date): Text[100]
     begin
